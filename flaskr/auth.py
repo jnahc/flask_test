@@ -28,7 +28,7 @@ def register():
       error = 'Username is required.'
     elif not password:
       error = 'Password is required.'
-    
+
     if error is None:
       try:
         db.execute(
@@ -40,7 +40,7 @@ def register():
         error = f"User {username} is already registered."
       else:
         return redirect(url_for("auth.login"))
-    
+
     flash(error)
 
   return render_template('auth/register.html')
@@ -61,15 +61,15 @@ def login():
     if user is None:
       error = 'Incorrect username.'
     elif not check_password_hash(user['password'], password):
-      error = 'Incorrect password'
-    
+      error = 'Incorrect password.'
+
     if error is None:
       session.clear()
       session['user_id'] = user['id']
       return redirect(url_for('index'))
-    
+
     flash(error)
-  
+
   return render_template('auth/login.html')
 
 # LOGIN EXISTING USER 
@@ -82,7 +82,7 @@ def load_logged_in_user():
     g.user = None
   else:
     g.user = get_db().execute(
-      'SELECT * FROM user WHERE id = ?', (user_id)
+      'SELECT * FROM user WHERE id = ?', (user_id,)
     ).fetchone()
 
 # LOGOUT
@@ -99,7 +99,7 @@ def login_required(view):
   def wrapped_view(**kwargs):
     if g.user is None:
       return redirect(url_for('auth.login'))
-    
-    return view (**kwargs)
-  
+
+    return view(**kwargs)
+
   return wrapped_view
