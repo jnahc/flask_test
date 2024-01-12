@@ -14,13 +14,11 @@ def test_register(client, app):
       "SELECT * FROM user WHERE username = 'a'", 
     ).fetchone() is not None
 
-@pytest.marker.parametrize(
-    ('username', 'password', 'messsage'), (
-      ('', '', b'Username is required.'),
-      ('a', '', b'Passowrd is required.'),
-      ('test', 'test', b'already registered'),
-    )
-  )
+@pytest.mark.parametrize(('username', 'password', 'message'), (
+    ('', '', b'Username is required.'),
+    ('a', '', b'Password is required.'),
+    ('test', 'test', b'already registered'),
+))
 def test_register_validate_input(client, username, password, message):
   response = client.post(
     '/auth/register',
@@ -38,7 +36,7 @@ def test_login(client, auth):
     assert session['user_id'] == 1
     assert g.user['username'] == 'test'
 
-  @pytest.mark_parametrize(('username', 'password', 'message'), (
+  @pytest.mark.parametrize(('username', 'password', 'message'), (
     ('a', 'test', b'Incorrect username.'),
     ('test', 'a', b'Incorrect username.'),
   ))
